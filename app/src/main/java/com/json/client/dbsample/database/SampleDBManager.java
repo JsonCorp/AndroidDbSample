@@ -8,10 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class SampleDBManager extends SQLiteOpenHelper {
+    private String LOG_TAG = "SampleDBManager: ";
     static final String DB_NAME = "sample_data_db";
     static final String DB_TABLE_SAMPLE_DATA = "sample_data";
     static final int DB_VERSION = 1;
+    static SampleDBUtils mSampleDBUtils;
 
     private static SampleDBManager mSampleDBManager = null;
 
@@ -27,34 +31,45 @@ public class SampleDBManager extends SQLiteOpenHelper {
         return mSampleDBManager;
     }
 
+    public void init(Context context) {
+        if (mSampleDBUtils == null) {
+            mSampleDBUtils = new SampleDBUtils(context);
+        }
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + DB_TABLE_SAMPLE_DATA + "(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "login_id TEXT,"+
+                "login_id TEXT," +
                 "message TEXT," +
-                "data_time TEXT);");
+                "date_time TEXT," +
+                "timestamp Long);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch(oldVersion) {
+        switch (oldVersion) {
             case 1:
 
                 break;
         }
     }
 
-    public long insert(ContentValues addRowValue){
-        return getWritableDatabase().insert(DB_TABLE_SAMPLE_DATA,null,addRowValue);
+    long insert(ContentValues addRowValue) {
+        return getWritableDatabase().insert(DB_TABLE_SAMPLE_DATA, null, addRowValue);
     }
 
-    public int insertAll(ContentValues[] values){
+    public long insert(String loginId, String message, String dateTime, long timestamp) {
+        return mSampleDBUtils.insert(loginId, message, dateTime, timestamp);
+    }
+
+    int insertAll(ContentValues[] values) {
         SQLiteDatabase db = getWritableDatabase();
 
         db.beginTransaction();
 
-        for(ContentValues contentValues : values){
-            db.insert(DB_TABLE_SAMPLE_DATA,null,contentValues);
+        for (ContentValues contentValues : values) {
+            db.insert(DB_TABLE_SAMPLE_DATA, null, contentValues);
         }
 
         db.setTransactionSuccessful();
@@ -63,15 +78,23 @@ public class SampleDBManager extends SQLiteOpenHelper {
         return values.length;
     }
 
-    public Cursor query(String [] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy){
-        return getReadableDatabase().query(DB_TABLE_SAMPLE_DATA,columns,selection,selectionArgs,groupBy,having,orderBy);
+    Cursor query(String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        return getReadableDatabase().query(DB_TABLE_SAMPLE_DATA, columns, selection, selectionArgs, groupBy, having, orderBy);
     }
 
-    public int update(ContentValues updateRowValue,String whereClause, String[] whereArgs){
-        return getWritableDatabase().update(DB_TABLE_SAMPLE_DATA,updateRowValue,whereClause,whereArgs);
+    int update(ContentValues updateRowValue, String whereClause, String[] whereArgs) {
+        return getWritableDatabase().update(DB_TABLE_SAMPLE_DATA, updateRowValue, whereClause, whereArgs);
     }
 
-    public int delete(String whereClause, String[] whereArgs){
-        return getWritableDatabase().delete(DB_TABLE_SAMPLE_DATA,whereClause,whereArgs);
+    int delete(String whereClause, String[] whereArgs) {
+        return getWritableDatabase().delete(DB_TABLE_SAMPLE_DATA, whereClause, whereArgs);
+    }
+
+    public int deleteAll() {
+        return mSampleDBUtils.deleteAll();
+    }
+
+    public ArrayList<String> getDbDataList() {
+        return mSampleDBUtils.getDbDataList();
     }
 }

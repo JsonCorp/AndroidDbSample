@@ -21,6 +21,11 @@ public class SampleDBProvider extends ContentProvider {
         return mSampleDBManager != null;
     }
 
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        return mSampleDBManager.insertAll(values);
+    }
+
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
