@@ -16,6 +16,12 @@ import com.json.client.dbsample.utils.Utils;
 
 import java.util.ArrayList;
 
+/** https://json8.tistory.com/13
+ *   - ADD : 데이터를 저장
+ *   - SEARCH : 저장된 데이터를 확인
+ *   - DELETE : 데이터 삭제 (전체 삭제됨)
+ *   - CLEAR : 화면 하단 로그 전체 삭제
+ */
 public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = "MainActivity: ";
     private Context mContext;
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(View -> searchDbData());
         deleteButton.setOnClickListener(View -> deleteDbData());
         clearButton.setOnClickListener(View -> clearData());
+
         mLogUtils = new LogUtils(this, mLogView, LOG_TAG);
         mUtils = new Utils(mContext);
         mSampleDBManager = SampleDBManager.getInstance(mContext);
@@ -58,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private void addDbData() {
         String message = mMessageEditText.getText().toString();
         if (message.isEmpty()) {
-            showToast("메시지 입력 후 저장");
-            return;
+            mMessageEditText.setText("TEST Message");
+            message = mMessageEditText.getText().toString();
         }
 
         String dateTime = mUtils.getDateTime();
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteDbData() {
         int result = mSampleDBManager.deleteAll();
-        mLogUtils.i("deleteDbData : result : " + result);
+        mLogUtils.i("deleteDbData : result : " + result + "개 항목 삭제 완료");
     }
 
 

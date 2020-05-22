@@ -10,6 +10,13 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/** https://json8.tistory.com/13
+ * DB 생성 및 외부 Interface 제공
+ *
+ * 추가/검색/삭제 기능.
+ *
+ * DB Version 1 : 최초 생성.
+ */
 public class SampleDBManager extends SQLiteOpenHelper {
     private String LOG_TAG = "SampleDBManager: ";
     static final String DB_NAME = "sample_data_db";
